@@ -1,0 +1,20 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+df = pd.read_excel('path_here', sheet_name='FvOD')
+layout = pd.read_excel('path_here', sheet_name='layout')
+layout_dict = dict(zip(layout.Well, layout.name))
+
+df = df.melt(id_vars= 'Time', var_name= 'Strain', value_name= 'FvOD')
+df['Strain'].replace(layout_dict, inplace = True)
+
+
+a = np.arange(0, 75, 10).tolist() #if you want to arange x ticks differently
+plt.figure(figsize=(10, 10))
+sns.pointplot(data = df, x = 'Time', y = 'FvOD', join= False, ci = 'sd', hue = 'Strain')
+plt.xticks(a)
+plt.xlabel('Time (hours)')
+plt.show()
